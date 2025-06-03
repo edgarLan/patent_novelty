@@ -1,0 +1,127 @@
+#############################################################
+# HOW TO WRITE DATA TYPES IN THIS CONFIG FILE
+# Used with read_config_txt() Python parser
+# Configuration variables are always printed so you can make sure variables are parsed the right way.
+#############################################################
+
+# === Booleans ===
+# true or false (case-insensitive)
+# Example:
+#   decompress=true
+#   csv_clean=False
+
+# === Strings ===
+# Plain text (quotes optional unless you want to preserve spaces)
+# Example:
+#   pathData=C:/Users/edgar/data
+
+# === Integers ===
+# Whole numbers without quotes
+# Example:
+#   nbYearsRef=5
+
+# === Floats ===
+# Use a dot for decimals
+# Example:
+#   thr_new_div=0.0041
+
+# === Lists of strings ===
+# Use comma-separated values, no need for brackets
+# Example:
+#   listIPC=G06F,G01N,A61B
+#   base_cols=claims,background
+# For a list of only one element, add a comma at the end
+#   listIPC=G06F,
+
+# You can also use bracketed notation if preferred:
+#   ipcList=[G06F,G01N]
+#   or
+#   ipcList=["G06F","G01N"]
+
+# === Lists of numbers ===
+# Same as string lists; no brackets needed
+# Example:
+#   listYearsUnComp=2007,2008,2009
+
+# === Nested lists (e.g., list of lists) ===
+# Use brackets (your parser auto-quotes barewords)
+# Example:
+#   sC=[[claims,background]]
+
+# If the auto-quote fails, use explicit quotes:
+#   sC=[["claims","background"]]
+#############################################################
+
+# ===== Global settings =====
+pathData=C:/Users/edgar/OneDrive/Bureau/Ecole/HEC/A24/BrevetNLP/patent_novelty/data
+pathMetrics=C:/Users/edgar/OneDrive/Bureau/Ecole/HEC/A24/BrevetNLP/patent_novelty/metrics
+yearList=2016,
+ipcList=F03D,
+
+# ===== Steps to run =====
+decompress=False
+csv_raw=False
+technet=False
+metrics_raw=False
+csv_clean=False
+match_app_pat=False
+controlVars=False
+cd_index_compute=False
+metricAnalysis=False
+top10=False
+
+# ===== Decompress settings =====
+listYearsUnComp=2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
+# Uses: pathData
+
+# ===== Raw CSV generation =====
+listIPC=G06F,G01N,A61B,B60L,E21B,F03D,H01L,H04W,C07D,B32B
+listYearsEval=2012,2013,2014,2015,2016
+nbYearsRef=5
+batch_size=100000
+# Uses: pathData
+
+# ===== Technet =====
+# (no variables in current version)
+# Uses: pathData
+
+# ===== Clean CSVs =====
+# Uses: pathData, yearList, ipcList
+
+# ===== Metrics computation =====
+tE_cols=claims,
+base_cols=claims,background
+w_size=3 
+chunksize=10000
+metrics_to_compute=newness,uniqueness,difference,surprise
+thr_new_div=0.0041
+thr_new_div_flag=0.0014
+thr_new_prob=57.14
+thr_new_prob_flag=0.0014
+thr_uniq_flag=0.527
+thr_uniqp_flag=0.1295
+useClusters=True
+nb_clusters=4
+neighbor_dist=0
+thr_diff=0.85
+thr_surp=0.00256
+forDemo=True
+# Uses: pathData, pathMetrics, yearList, ipcList
+
+# ===== Patent ID Matching =====
+# Uses: pathData, yearList
+
+# ===== Control variables =====
+sC=[[claims,background]]
+# Uses: pathData, pathMetrics, yearList, ipcList
+
+# ===== CD-Index computation =====
+# Uses: pathData, pathMetrics
+
+# ===== Metric analysis =====
+p_rbo=0.9
+# Uses: pathData, pathMetrics, yearList
+
+# ===== Top 10 results =====
+vsList=["claims_vs_claims_background_Metrics"]
+# Uses: pathData, pathMetrics, yearList, ipcList

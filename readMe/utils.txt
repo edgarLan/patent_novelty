@@ -1,0 +1,509 @@
+# Project Utilities Overview
+
+This project includes a set of utility functions and classes designed for text processing, novelty detection, surprise analysis, and vocabulary cleaning related to technological terms. Below is a summary of key imports, functionality, and descriptions of important functions.
+
+---
+
+## Dependencies
+
+The utilities rely on several Python libraries, including:
+
+- `collections` (Counter, defaultdict, OrderedDict)
+- `nltk` (tokenization, collocations, frequency distributions, ngrams, stopwords)
+- `pandas`, `numpy`
+- `scipy.stats` (statistical tests and correlations)
+- `spacy` (lemmatization, NLP pipelines)
+- `tqdm` (progress bars)
+- `rbo` (Rank-Biased Overlap calculations)
+- `statsmodels`
+- `fast_cdindex` (clustering index)
+- Custom modules: `utils.cleaning`, `novelty.novelty`, `novelty.surprise`
+
+---
+
+## Key Functionalities
+
+### Technet Vocabulary Cleaning and Lemmatization
+
+- **`createCleanTechnet(pathData)`**  
+  Reads raw Technet keyword files, splits multi-word tokens on underscores, and generates a cleaned vocabulary list saved as `clean_technet.csv`.
+
+- **`lemmatizeTechnet(pathData)`**  
+  Loads the cleaned Technet vocabulary and lemmatizes each token using spaCy's English model, saving the output as `lemmatized_technet.csv`.
+
+---
+
+### Surprise and PMI Computations
+
+- **`pmi(input_, w_size=3)`**  
+  Computes Pointwise Mutual Information (PMI) scores for bigrams in a list of tokens using a specified window size.
+
+- **`OptimizedIncrementalPMI`** (class)  
+  An optimized class for incrementally computing PMI for bigrams using a sliding window. Supports updating counts with new data and efficient PMI recalculation.
+
+---
+
+### Additional Utilities
+
+- Imports and utilities to support text tokenization, statistical tests (Pearson, Spearman, Kendall Tau, t-tests), bigram extraction, clustering indices, and JSON handling.
+
+---
+
+## Usage
+
+The functions typically require a path to data folders structured as:
+
+
+
+# Utils
+
+This module contains a collection of utility functions used for statistical analysis and metric evaluation, particularly focusing on novelty, uniqueness, difference, and surprise metrics.
+
+---
+
+## ANALYSIS UTILITIES
+
+### Score Analysis
+
+#### `correl_labelScores(df)`
+
+Compute Pearson and Spearman correlations between a binary `label` column and multiple score metrics ending with `"ratio"`.
+
+- **Parameters:**
+  - `df` (`pandas.DataFrame`): DataFrame with a `'label'` column and several metric columns ending with `'ratio'`.
+- **Returns:**
+  - `pandas.DataFrame` summarizing correlation coefficients and p-values for metrics:
+    - newness (`new_ratio`)
+    - uniqueness (`uniq_ratio`)
+    - difference (`diff_ratio`)
+    - surprise divergence (`surpDiv_ratio`)
+
+---
+
+#### `ttest_metric(df)`
+
+Performs Welch's t-tests comparing groups defined by `label` (0 vs 1) on all metrics ending in `"ratio"`.
+
+- **Parameters:**
+  - `df` (`pandas.DataFrame`): DataFrame with binary `label` and metric columns ending with `'ratio'`.
+- **Returns:**
+  - `pandas.DataFrame` containing t-statistics and p-values for each metric, formatted for display.
+
+---
+
+#### `KTcorrel_metrics(df)`
+
+Computes pairwise Kendall's Tau correlation coefficients (with p-values) among ratio metrics and formats the results as a lower triangular matrix.
+
+- **Parameters:**
+  - `df` (`pandas.DataFrame`): DataFrame containing multiple columns ending with `'_ratio'`.
+- **Returns:**
+  - `pandas.DataFrame` with Kendall’s Tau values and p-values in a triangular matrix format.
+
+---
+
+#### `rbo_metrics(df, p=0.9)`
+
+Computes Rank-Biased Overlap (RBO) between ranked lists of ratio metrics, measuring similarity in rankings with emphasis on top ranks.
+
+- **Parameters:**
+  - `df` (`pandas.DataFrame`): DataFrame containing columns ending with `'_ratio'`.
+  - `p` (`float`, optional): Persistence parameter controlling the weighting of top ranks in RBO calculation; default is 0.9.
+- **Returns:**
+  - `pandas.DataFrame` showing pairwise RBO scores between metrics in a lower triangular matrix.
+
+---
+
+
+
+### Control Variables Additions
+
+This module contains functions to compute and add control variables related to text data within patent datasets, including word counts, vocabulary sizes, and word frequency rankings. These variables help quantify the lexical properties of selected text columns in patents, and facilitate further analysis.
+
+---
+
+#### Functions
+
+- **count_words(df, columns)**  
+  Counts the total number of words across multiple specified string columns for each row in a DataFrame. Useful for measuring text length in patent entries.
+
+  **Parameters:**  
+  - `df` (`pd.DataFrame`): DataFrame with text data.  
+  - `columns` (`list[str]`): Columns to consider for counting words.
+
+  **Returns:**  
+  - `pd.Series`: Total word count per row.
+
+---
+
+- **count_vocab(df, columns)**  
+  Counts the number of unique words (vocabulary size) across specified columns, per row.
+
+  **Parameters:**  
+  - `df` (`pd.DataFrame`): DataFrame with text data.  
+  - `columns` (`list[str]`): Columns to include.
+
+  **Returns:**  
+  - `pd.Series`: Unique word count per row.
+
+---
+
+- **count_total_vocab(df, columns)**  
+  Counts the total vocabulary size (unique words) across all rows and specified columns combined.
+
+  **Parameters:**  
+  - `df` (`pd.DataFrame`): DataFrame with text data.  
+  - `columns` (`list[str]`): Columns to include.
+
+  **Returns:**  
+  - `int`: Total unique words across all rows and columns.
+
+---
+
+- **rank_words(df, columns, i)**  
+  Ranks words by frequency for a given row index `i` across specified columns, and calculates indices relative to the mean and standard deviation of word frequencies.
+
+  **Parameters:**  
+  - `df` (`pd.DataFrame`): DataFrame with text data.  
+  - `columns` (`list[str]`): Columns to include.  
+  - `i` (`int`): Row index to process.
+
+  **Returns:**  
+  - `tuple`: Indices corresponding to mean frequency, mean + std deviation, and mean - std deviation thresholds.
+
+---
+
+- **addControlVars(ipcList, yearList, sC, pathData, pathMetrics)**  
+  Processes multiple IPC codes and years to compute control variables (word counts, vocab sizes, rankings) for selected columns, merges these with metric data, and saves results as CSV.
+
+  **Parameters:**  
+  - `ipcList` (`list`): List of IPC identifiers.  
+  - `yearList` (`list`): List of years to process.  
+  - `sC` (`list` of `list`): List of column groups to analyze.  
+  - `pathData` (`str`): Path to the base data directory (containing cleaned CSVs, vocabularies, etc.).  
+  - `pathMetrics` (`str`): Path to metrics directories.
+
+  **Returns:**  
+  - `None` (results saved as CSV files in specified output directories)
+
+---
+
+These control variables are essential for text-based patent analysis, providing lexical richness, complexity, and distribution features that can be incorporated into further statistical or machine learning modeling.
+
+---
+
+### Usage
+
+Make sure to prepare your data directories correctly, and define appropriate IPC codes, years, and column groups before calling `addControlVars`. Example:
+
+```python
+ipc_codes = ['A01B', 'B23C']
+years = [2010, 2011, 2012]
+selected_columns = [['title', 'abstract'], ['claims']]
+
+addControlVars(ipc_codes, years, selected_columns, pathData='/path/to/data', pathMetrics='/path/to/metrics')
+
+
+
+##### Concatenate DataFrames with Blank Lines Between #####
+
+```python
+def merge_dataframes_with_blank_lines(df_list, df_names):
+    """
+    Merges a list of DataFrames into a single DataFrame with blank rows between them.
+    Ensures column alignment and fills missing values with blanks instead of NaN.
+    Adds DataFrame names in the first column of blank rows and avoids an extra blank row.
+
+    Parameters:
+        df_list (list of pd.DataFrame): List of DataFrames to merge.
+        df_names (list of str): List of names corresponding to the DataFrames in df_list.
+
+    Returns:
+        pd.DataFrame: Merged DataFrame with blank rows in between and names in the first column.
+    """
+    # Collect all column names from all DataFrames, ensuring column names are strings
+    all_columns = set()
+    for df in df_list:
+        all_columns.update(map(str, df.columns))
+    all_columns = sorted(all_columns, key=str)
+
+    # Standardize all DataFrames to have all columns with blanks for missing columns
+    standardized_dfs = [df.rename(columns=str).reindex(columns=all_columns, fill_value="") for df in df_list]
+
+    # Create a blank row DataFrame with correct columns
+    blank_row = pd.DataFrame([[""] * len(all_columns)], columns=all_columns)
+
+    merged_dfs_with_names = []
+
+    # Interleave blank rows and name rows between DataFrames
+    for df, name in zip(standardized_dfs, df_names):
+        # Create a blank row with the DataFrame's name in the first column
+        name_row = pd.DataFrame([[name] + [""] * (len(all_columns) - 1)], columns=all_columns)
+        merged_dfs_with_names.append(name_row)  # Add the name row
+        merged_dfs_with_names.append(df)        # Add the actual DataFrame
+        merged_dfs_with_names.append(blank_row) # Add a blank row after
+
+    # Concatenate all DataFrames and blank rows
+    merged_df = pd.concat(merged_dfs_with_names, ignore_index=True)
+
+    return merged_df
+
+
+
+# Concatenate Top 10 - README
+
+## Overview
+
+This module provides functions to **concatenate**, **filter**, and **extract top or bottom 10 rows** of patent metric data from multiple CSV files, focused on specific IPC codes and comparison groups (VS). It integrates CD-index metadata and additional control variables to enrich the extracted top/bottom rows.
+
+---
+
+## Functions
+
+### 1. `row_bind_selected_files(pathMetrics, target_ipc, target_vs)`
+
+Concatenates all CSV files in the given directory that correspond to a specified IPC code and comparison group (`vs`) into a single DataFrame.
+
+- **Parameters:**
+  - `pathMetrics` (`str`): Directory path containing the CSV metric files.
+  - `target_ipc` (`str`): IPC code to filter files by (e.g., `"G06F"`).
+  - `target_vs` (`str`): Comparison group label (e.g., `"top10"`).
+
+- **Returns:**
+  - `pd.DataFrame`: Concatenated DataFrame with all matching files, with additional columns for `year`, `ipc`, and `vs`.
+
+- **Notes:**
+  - Only files ending with `"Metrics_aVC.csv"` are considered.
+  - Files not matching the `ipc` or `vs` criteria are skipped.
+  - Any errors during file reading are caught and printed.
+
+---
+
+### 2. `listMatch(lists, ipc, vs, minMax, col, df_filtered)`
+
+Matches top or bottom 10 rows from a nested dictionary structure (`lists`) with additional columns from a filtered DataFrame.
+
+- **Parameters:**
+  - `lists` (`dict`): Nested dictionary containing top/bottom 10 data per IPC and comparison group.
+  - `ipc` (`str`): IPC code key.
+  - `vs` (`str`): Comparison group key.
+  - `minMax` (`str`): `"min"` or `"max"` to indicate bottom or top 10.
+  - `col` (`str`): Metric column to sort and filter by.
+  - `df_filtered` (`pd.DataFrame`): Filtered DataFrame containing additional columns.
+
+- **Returns:**
+  - `list` of lists: Each sublist contains
+    - `application_number` (str),
+    - `label` (int),
+    - metric column value (float),
+    - plus five additional columns: `new_ratio`, `uniq_ratio`, `diff_ratio`, `surpDiv_ratio`, `CD5`.
+
+- **Notes:**
+  - The function builds a lookup table for efficient matching.
+  - The additional columns must exist in `df_filtered`.
+
+---
+
+### 3. `makeLists(pathMetrics, ipc, vs, df_CDI=pd.DataFrame, pathCDI="cd5_index_results.csv", path_patent="patents_{}.csv", yearList=range(2012, 2017))`
+
+Generates nested dictionaries containing top and bottom 10 entries for selected metrics, including handling cases with missing CD5 values.
+
+- **Parameters:**
+  - `pathMetrics` (`str`): Folder path containing metric files.
+  - `ipc` (`str`): IPC code to filter the data.
+  - `vs` (`str`): Comparison group name.
+  - `df_CDI` (`pd.DataFrame` or default empty): Optional precomputed CD-index DataFrame.
+  - `pathCDI` (`str`): Path to CD-index results CSV.
+  - `path_patent` (`str`): Template path for patent metadata CSV files.
+  - `yearList` (iterable): Years to include in processing.
+
+- **Returns:**
+  - `lists` (`dict`): Nested dictionary with top/bottom 10 data for each metric.
+  - `lists_CD_nan` (`dict`): Same as `lists` but only includes rows with missing `CD5`.
+
+- **Workflow:**
+  1. Reads and concatenates metric files with `row_bind_selected_files`.
+  2. Creates CD-index using `createCDindex` (external function).
+  3. Merges CD-index metadata with metrics data.
+  4. Filters relevant columns and prepares for top/bottom extraction.
+  5. Extracts top and bottom 10 rows for each metric column, including missing `CD5` subsets.
+  6. Uses `listMatch` to add additional control variables.
+
+---
+
+## Usage Example
+
+```python
+path_metrics = "./metrics_data"
+ipc_code = "G06F"
+vs_group = "top10"
+
+# Generate the top and bottom 10 lists
+lists, lists_cd_nan = makeLists(path_metrics, ipc_code, vs_group)
+
+# Example access: top 10 max for 'new_ratio'
+top_new_ratio_max = lists[ipc_code][vs_group]['max']['new_ratio']
+
+
+
+# top10Complete
+
+`top10Complete` is a Python function designed to generate and save the top 10 maximum and minimum values for various patent-related metrics across different IPC codes, comparison metric sets (vs codes), and years. It returns a consolidated DataFrame containing the combined results.
+
+---
+
+## Description
+
+This function processes patent metrics data organized by IPC codes and comparison metrics. For each combination of IPC code and metric comparison, it computes the top 10 maximum and minimum patent scores across multiple metrics. The results are saved to disk and returned as a vertically concatenated pandas DataFrame.
+
+---
+
+## Parameters
+
+- **pathMetrics** (`str`):  
+  Path to the directory containing patent metrics data.
+
+- **pathData** (`str`):  
+  Path to the directory containing patent-related data files, including compressed data, cleaned CSVs, raw CSVs, JSON files, and vocabulary.
+
+- **ipcList** (`list`, optional):  
+  List of IPC codes to process. Defaults to:
+  ```python
+  ["G06F", "A61B", "H01L", "B60L", "E21B", "F03D", "H01L", "H04W", "C07D", "B32B"]
+
+
+
+# compute_scores
+
+`compute_scores` is a Python function designed to evaluate various innovation-related metrics — such as **newness**, **uniqueness**, **difference**, and **surprise** — to analyze linguistic or conceptual novelty in knowledge bases over time.
+
+---
+
+## 🧠 Description
+
+The function computes multiple scores that quantify how new, unique, different, or surprising elements (e.g. bigrams or concepts) are in a given knowledge base. These metrics are useful in NLP and innovation studies, particularly when comparing distributions over time or identifying emerging patterns in text data.
+
+---
+
+## 📥 Parameters
+
+| Parameter | Type | Description |
+|----------|------|-------------|
+| `KB_matrix` | array-like | Co-occurrence or term matrix of the known knowledge base. |
+| `KB_dist` | array-like | Distribution of known terms or concepts. |
+| `NewKB_dist` | array-like | Distribution of new or recent terms/concepts. |
+| `variation_dist` | array-like | Vector representing the difference between old and new distributions. |
+| `dict_know_pmi` | dict | PMI values for known terms. |
+| `EB_PMI` | dict | PMI values from the established base. |
+| `base_bigram_set` | set | Set of base bigrams to compare against. |
+| `New_EB_PMI` | dict | PMI values for the new period (used to evaluate surprise). |
+| `newness_type` | str | Method for newness detection (`'div'` or `'prob'`). |
+| `uniq_type` | str | Method for uniqueness detection (`'dist'` or `'proto'`). |
+| `diff_type` | str | Method for difference computation (`'local'` or `'global'`). |
+| `neighbor_dist` | float | Precomputed neighbor distance. Set to `0.` to estimate internally. |
+| `thr_new_div` | float | Threshold for JS divergence (distributional change). |
+| `thr_new_div_flag` | float | Threshold to flag divergence-based novelty. |
+| `thr_new_prob` | float | Threshold for probability-based newness. |
+| `thr_new_prob_flag` | float | Flag threshold for probability-based newness. |
+| `thr_uniq_flag` | float | Threshold for uniqueness (distance-based). |
+| `thr_uniqp_flag` | float | Threshold for uniqueness (prototype shift). |
+| `thr_diff` | float | Threshold for difference binarization. |
+| `thr_surp` | float | Threshold to flag surprising bigrams via PMI. |
+| `useClusters` | bool | Use clustering (e.g. KMeans) in difference computation. |
+| `KSCluster` | object | A KSCluster instance if clustering is used. |
+| `nb_clusters` | int | Number of clusters to use. |
+| `metrics_to_compute` | list or None | Subset of metrics to compute: `["newness", "uniqueness", "difference", "surprise"]`. |
+
+---
+
+## 📤 Returns
+
+Returns a tuple:
+
+```python
+(
+    newness,           # float or None
+    novelty_new,       # int or None (1 if flagged as new)
+    uniqueness,        # float or None
+    novelty_uniq,      # int or None (1 if flagged as unique)
+    dif_score,         # float or None
+    dif_bin,           # int or None (1 if flagged as different)
+    neighbor_dist,     # float
+    mean100,           # float or None (mean of top-100 ratios)
+    dist_surprise,     # int or None (count of surprising bigrams)
+    uniq_surprise      # int or None (count of unique, surprising bigrams)
+)
+
+
+# measureNov
+
+The `measureNov` function computes **novelty-related metrics** (e.g., newness, uniqueness, difference, surprise) across multiple `(year, IPC)` combinations. It processes text data by iterating over yearly and IPC-specific datasets, calculating key linguistic and innovation indicators.
+
+---
+
+## 📌 Purpose
+
+To extract and compute innovation signals from text data by evaluating conceptual or linguistic shifts over time and across technological categories (IPC codes).
+
+---
+
+## 📥 Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `pathData` | `str` | Path to the data folder (containing `compressedData`, `csv_clean`, `csv_raw`, `jsonData`, `vocab`). |
+| `pathMetrics` | `str` | Path to the directory where metric results will be saved. |
+| `tE_cols` | `list[str]` | Columns to extract from the `tE` dataset. |
+| `base_cols` | `list[str]` | Columns used to define the base bigram/concept set. |
+| `w_size` | `int` | Window size used for co-occurrence computation. |
+| `yearList` | `list[str]` | List of years to process. If empty, inferred from file names. |
+| `ipcList` | `list[str]` | List of IPC codes to process. If empty, inferred from file names. |
+| `chunksize` | `int` | Size of text chunks for PMI computation (default: `10,000`). |
+| `metrics_to_compute` | `list[str]` | Which metrics to compute; subset of `["newness", "uniqueness", "difference", "surprise"]`. |
+| `thr_new_div` | `float` | Threshold for Jensen-Shannon divergence in newness detection (default: `0.0041`). |
+| `thr_new_div_flag` | `float` | Flag threshold for divergence-based novelty (default: `0.0014`). |
+| `thr_new_prob` | `float` | Threshold for newness via probability ratio (default: `57.14`). |
+| `thr_new_prob_flag` | `float` | Flag threshold for probability-based newness (default: `0.0014`). |
+| `thr_uniq_flag` | `float` | Threshold for uniqueness using distance-based method (default: `0.527`). |
+| `thr_uniqp_flag` | `float` | Threshold for uniqueness using prototype-shift method (default: `0.1295`). |
+| `useClusters` | `bool` | Use clustering (e.g. KMeans) for computing difference scores (default: `True`). |
+| `nb_clusters` | `int` | Number of clusters to use (default: `4`). |
+| `neighbor_dist` | `float` | Precomputed neighbor distance. If `0.`, it will be estimated. |
+| `thr_diff` | `float` | Threshold for flagging difference score (default: `0.85`). |
+| `thr_surp` | `float` | Surprise threshold based on PMI (default: `0.00256`). |
+| `forDemo` | `bool` | If `True`, runs only on a single patent for demonstration purposes. |
+
+---
+
+## 📤 Output
+
+- Saves metric results for each `(year, IPC)` combination to the designated `pathMetrics` directory.
+- Returns no object directly, but produces CSVs or serialized metric files for later analysis or visualization.
+
+---
+
+## 📝 Notes
+
+- Relies on three aligned data subdirectories: `tE`, `KS`, and `ES`.
+- Year and IPC values must be either specified or inferable from filenames.
+- Designed to handle large datasets efficiently using chunking and modular metric computation.
+- Enables integration of clustering logic to enhance difference score reliability.
+
+---
+
+## ✅ Example Usage
+
+```python
+measureNov(
+    pathData="data/",
+    pathMetrics="metrics/",
+    tE_cols=["title", "abstract"],
+    base_cols=["abstract"],
+    w_size=5,
+    yearList=["2014", "2015", "2016"],
+    ipcList=["G06F", "A61B"],
+    metrics_to_compute=["newness", "uniqueness", "surprise"]
+)
+
+
+

@@ -1,0 +1,15 @@
+setup.py
+novelty/__init__.py
+novelty/divergences.py
+novelty/novelty.py
+novelty/surprise.py
+patent_novelty.egg-info/PKG-INFO
+patent_novelty.egg-info/SOURCES.txt
+patent_novelty.egg-info/dependency_links.txt
+patent_novelty.egg-info/requires.txt
+patent_novelty.egg-info/top_level.txt
+utils/__init__.py
+utils/cleaning.py
+utils/config_utils.py
+utils/importation.py
+utils/utils.py

@@ -1,0 +1,12 @@
+pandas>=1.3
+numpy>=1.21
+scipy>=1.7
+nltk>=3.6
+spacy==3.7.2
+tqdm>=4.60
+scikit-learn>=1.0
+statsmodels>=0.13
+rbo>=0.1.3
+joblib>=1.2
+fast-cdindex@ git+https://github.com/dspinellis/fast-cdindex.git
+openpyxl

@@ -1,0 +1,28 @@
+Metadata-Version: 2.4
+Name: patent_novelty
+Version: 0.1.0
+Summary: Tools for detecting novelty, surprise, and divergence in patent text data.
+Author: Ton Nom
+Author-email: ton.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.8
+Requires-Dist: pandas>=1.3
+Requires-Dist: numpy>=1.21
+Requires-Dist: scipy>=1.7
+Requires-Dist: nltk>=3.6
+Requires-Dist: spacy==3.7.2
+Requires-Dist: tqdm>=4.60
+Requires-Dist: scikit-learn>=1.0
+Requires-Dist: statsmodels>=0.13
+Requires-Dist: rbo>=0.1.3
+Requires-Dist: joblib>=1.2
+Requires-Dist: fast-cdindex@ git+https://github.com/dspinellis/fast-cdindex.git
+Requires-Dist: openpyxl
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
