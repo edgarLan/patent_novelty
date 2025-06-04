@@ -1,4 +1,4 @@
-from utils.importation import loopFinal, tar_gz2json
+from utils.importation import loopFinal, tar_gz2json, tar_gz2jsonDEMO
 from utils.cleaning import cleanCSV
 from utils.config_utils import read_config_txt
 from utils.utils import createCleanTechnet, lemmatizeTechnet, measureNov, applicationPatent_match, addControlVars, createGraph, calculateCDI, metricAnalysis, output_to_excel, top10Complete
@@ -9,9 +9,12 @@ if __name__ == "__main__":
     config = read_config_txt("config.txt")
     print(config)
 
-    # From compressed tar to json
+
+    # From compressed tar to json - demo only extracts first 1000 jsons
     if config["decompress"]:
         tar_gz2json(listYear=config["listYearsUnComp"], pathData=config["pathData"])
+    if config["decompress_DEMO"]:
+        tar_gz2jsonDEMO(listYear=config["listYearsUnComp"], pathData=config["pathData"])
 
     # From json to csv raw
     if config["csv_raw"]:
