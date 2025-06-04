@@ -1,11 +1,12 @@
 # ====================
 # DATA FILES TO IGNORE
 # ====================
-data/**/*.tsv
-data/**/*.csv
-data/**/*.json
-data/**/*.tar.gz
-data/**/*.zip
+# Ignore all files in data/ and subfolders
+data/**/*
+# But do not ignore directories themselves
+!data/**/
+# And do not ignore any .gitkeep files (optional, to keep empty folders)
+!data/**/.gitkeep
 
 # ====================
 # MODEL / TEMP FILES
@@ -16,21 +17,13 @@ data/**/*.zip
 # ============================
 # METRICS DIRS (keep empty)
 # ============================
-metrics/metrics_raw/*
-!metrics/metrics_raw/.gitkeep
+# Ignore all files in metrics/ and subfolders
+metrics/**/*
+# Keep all directories
+!metrics/**/
+# Keep .gitkeep files to preserve empty folder structure
+!metrics/**/.gitkeep
 
-metrics/top10/*
-!metrics/top10/.gitkeep
-
-metrics/cd_index/*
-!metrics/cd_index/.gitkeep
-
-metrics/metricAnalysis/*
-!metrics/metricAnalysis/.gitkeep
-
-# Optionnel : ignorer tous les autres fichiers dans metrics/
-metrics/*/*
-!metrics/.gitkeep
 
 # ====================
 # PYTHON CACHE & LOGS
