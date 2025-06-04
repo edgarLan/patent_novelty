@@ -60,6 +60,7 @@ ipcList=F03D,
 
 # ===== Steps to run =====
 decompress=False
+decompress_DEMO=False
 csv_raw=False
 technet=False
 metrics_raw=False

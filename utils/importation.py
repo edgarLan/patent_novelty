@@ -9,6 +9,36 @@ from tqdm import tqdm
 import tarfile 
 import time
 
+# Création de jdD des 1000 premiers brevets pour faire tests
+
+def tar_gz2jsonDEMO(listYearsUnComp, pathData):
+    """
+    Extracts the first 1000 files from each .tar.gz archive for the given years.
+
+    Archives are read from 'compressedData/' and files are extracted to 'jsonData/'.
+    Useful for testing without decompressing all data.
+
+    Parameters:
+    - listYearsUnComp: list of years (int or str)
+    - pathData: base path containing 'compressedData' and 'jsonData' subfolders
+    """
+    pathCompressed = os.path.join(pathData, "compressedData")
+    pathJson = os.path.join(pathData, "jsonData")
+    for year in listYearsUnComp:  
+        # Construct the filename
+        filename = os.path.join(pathCompressed, f'{year}.tar.gz')
+        
+        # Open the tar.gz file
+        with tarfile.open(filename, 'r:gz') as file:
+            # Use the iterator to avoid loading all members at once
+            for i, member in enumerate(file):
+                if i > 1000:  # Change this number for how many files you want to test with
+                    break
+                file.extract(member, pathJson)
+        
+        print(f'Test extracted first 1000 files from: {filename}')
+
+
 def tar_gz2json(listYear, pathData):
     '''
     Extracts .tar.gz archives for each year in the given range into a destination directory.
@@ -40,6 +70,8 @@ def tar_gz2json(listYear, pathData):
         elapsed_time = time.time() - start_time
 
         print(f'Extracted: {filename} in {elapsed_time:.2f} seconds')
+
+
 
 
 def checkYears(year, yearsNeeded, pathData):
