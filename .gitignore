@@ -7,6 +7,7 @@ data/**/*
 !data/**/
 # And do not ignore any .gitkeep files (optional, to keep empty folders)
 !data/**/.gitkeep
+data/app_pat_match/full/
 
 # ====================
 # MODEL / TEMP FILES
