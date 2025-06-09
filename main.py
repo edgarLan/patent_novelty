@@ -19,8 +19,8 @@ if __name__ == "__main__":
     # From json to csv raw
     if config["csv_raw"]:
         loopFinal(
-            listIPC=config["listIPC"],
-            listYearsEval=config["listYearsEval"],
+            listIPC=config["ipcList"],
+            listYearsEval=config["yearList"],
             nbYearsRef=config["nbYearsRef"],
             pathData=config["pathData"],
             batch_size=config["batch_size"]

@@ -1,6 +1,44 @@
+## 🚀 Getting Started
+
+To run the project locally:
+
+1. Clone the repository, install dependencies, and set up folders  
+   	```bash
+   	git clone https://github.com/edgarLan/patent_novelty.git
+   	cd patent_novelty
+	pip install -r requirements.txt
+	python -m spacy download en_core_web_sm
+	python create_structure.py
+	```
+
+2 - Download compressed patent data in /data/compressedData/
+	Place .tar.gz files (for years 2007–2016) in
+
+3 - Download citation data files.tsv files in /data/citationsData
+	g_patent.tsv
+	g_us_patent_citation.tsv
+
+4 - Download .txt files in /data/vocab/vocab/additional stopwords
+	technical_stopwords.txt
+	USPTO_stopwords_en.txt
+
+5 - Unzip app-patent match data
+	Unzip and place contents in /data/app_pat_match/
+
+6 - (Optional) Run demo instead of full project. Demo is only IPC=F03D, year=2016
+If you prefer to skip full preprocessing:
+	Unzip the csv_clean/
+	Place the folders (ES/, KS/, tE/) into /data/csv_clean/
+	in config.txt, steps to run, put true from metrics_raw onwards.
+	forDemo=True in metrics computation runs metrics for 90 (or less) patents of toEval.
+	
+7 - Use config.txt to adjust inputs
+
+
+
 # `patent_novelty` Project
 
-A Python pipeline for detecting **novelty**, **surprise**, and **distributional divergence** in patent texts. Combines natural language processing, statistical modeling, and unsupervised learning for analyzing innovation patterns over time.
+A Python pipeline for detecting novelty (newness, uniqueness and difference), surprise in patent texts. Combines natural language processing, statistical modeling, and unsupervised learning for analyzing innovation patterns over time.
 
 ---
 

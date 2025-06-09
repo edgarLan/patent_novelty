@@ -2037,9 +2037,9 @@ def iterateMetrics(path, pathOutput, tE_cols, base_cols, w_size, year, ipc, chun
     surpDiv_bin_vec = []
     
     if forDemo==True:
-        range_ = range(1,2)
-        application_number = application_number[list(range_)[0]]
-        label = label[list(range_)[0]]
+        range_ = range(min(len(tE), 30))
+        application_number = application_number[list(range_)]
+        label = label[list(range_)]
     else:
         range_ = range(len(tE))
     for i in range_:

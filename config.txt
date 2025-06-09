@@ -53,34 +53,39 @@
 #############################################################
 
 # ===== Global settings =====
-pathData=C:/Users/edgar/OneDrive/Bureau/Ecole/HEC/A24/BrevetNLP/patent_novelty/data
-pathMetrics=C:/Users/edgar/OneDrive/Bureau/Ecole/HEC/A24/BrevetNLP/patent_novelty/metrics
+pathData=C:/Users/edgar/OneDrive/Bureau/Ecole/HEC/A24/BrevetNLP/test_PN/patent_novelty/data
+pathMetrics=C:/Users/edgar/OneDrive/Bureau/Ecole/HEC/A24/BrevetNLP/test_PN/patent_novelty/metrics
+
+# Should be yearList=2012,2013,2014,2015,2016 and ipcList=G06F,G01N,A61B,B60L,E21B,F03D,H01L,H04W,C07D,B32B
+# but keeping yearList=2016, ipcList=F03D for demo purposes.
 yearList=2016,
 ipcList=F03D,
 
 # ===== Steps to run =====
+# Steps are in order, only have to choose between decompress and decompress_DEMO. decomporess_DEMO only extracts first 1000 patetns (.json) per year.
 decompress=False
 decompress_DEMO=False
 csv_raw=False
 technet=False
-metrics_raw=False
-csv_clean=False
+csv_clean=false
 match_app_pat=False
-controlVars=False
+metrics_raw=false
+controlVars=false
 cd_index_compute=False
-metricAnalysis=False
-top10=False
+metricAnalysis=True
+top10=True
 
 # ===== Decompress settings =====
-listYearsUnComp=2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
+# should be listYearsUnComp=2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
+# but keeping 2011 to 2016 for demo purposes.
+listYearsUnComp=2011,2012,2013,2014,2015,2016
 # Uses: pathData
 
 # ===== Raw CSV generation =====
-listIPC=G06F,G01N,A61B,B60L,E21B,F03D,H01L,H04W,C07D,B32B
-listYearsEval=2012,2013,2014,2015,2016
 nbYearsRef=5
+# nbYearsRef: number of years to consider to construct Knowlegde and Expectation space.
 batch_size=100000
-# Uses: pathData
+# Uses: pathData, ipsList, yearList
 
 # ===== Technet =====
 # (no variables in current version)
@@ -114,6 +119,7 @@ forDemo=True
 
 # ===== Control variables =====
 sC=[[claims,background]]
+# sC for selected columns.
 # Uses: pathData, pathMetrics, yearList, ipcList
 
 # ===== CD-Index computation =====

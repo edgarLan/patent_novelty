@@ -11,7 +11,7 @@ import time
 
 # Création de jdD des 1000 premiers brevets pour faire tests
 
-def tar_gz2jsonDEMO(listYearsUnComp, pathData):
+def tar_gz2jsonDEMO(listYear, pathData):
     """
     Extracts the first 1000 files from each .tar.gz archive for the given years.
 
@@ -24,7 +24,7 @@ def tar_gz2jsonDEMO(listYearsUnComp, pathData):
     """
     pathCompressed = os.path.join(pathData, "compressedData")
     pathJson = os.path.join(pathData, "jsonData")
-    for year in listYearsUnComp:  
+    for year in listYear:  
         # Construct the filename
         filename = os.path.join(pathCompressed, f'{year}.tar.gz')
         
@@ -132,7 +132,7 @@ def json2toEval(year, listIPC, pathData, batch_size=1):
     print(f"Create toEval, iterate through all patents of current year {year}")
 
     pathYear = os.path.join(pathJson, f"{year}")  # Updates with variable year
-    jsonNamesYear = [f for f in listdir(pathYear) if isfile(join(pathYear, f))] 
+    jsonNamesYear = [f for f in listdir(pathYear) if isfile(join(pathYear, f)) and f != '.gitkeep']
 
     # Initialize list for each IPC class
     good_expectations_classes_dict = {ipc: [] for ipc in listIPC}  # To store good expectations for each IPC
@@ -235,8 +235,8 @@ def json2_KS_ES(year, yearRef, listIPC, pathData, batch_size=1):
     pathRaw = os.path.join(pathData, "csv_raw")   
 
 
-    pathYear = os.path.join(pathJson, f"/{yearRef}/")  # Updates with variable year
-    jsonNamesYear = [f for f in listdir(pathYear) if isfile(join(pathYear, f))]
+    pathYear = os.path.join(pathJson, f"{yearRef}")  # Updates with variable year
+    jsonNamesYear = [f for f in listdir(pathYear) if isfile(join(pathYear, f)) and f != '.gitkeep']
 
     patent_number, titles, backgrounds, claims, summary, abstract, main_ipc, labels, sec_ipc, yearRefVec = {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}
     patent_numberE, titlesE, backgroundsE, claimsE, summaryE, abstractE, main_ipcE, labelsE, sec_ipcE, yearRefVecE = {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}, {ipc: [] for ipc in listIPC}
